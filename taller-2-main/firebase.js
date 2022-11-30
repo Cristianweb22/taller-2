@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
 
-import {getFirestore, collection, addDoc, getDocs} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js"
+import {getFirestore, collection, addDoc, getDocs, doc, getDoc, setDoc} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-firestore.js"
 import { getAuth, createUserWithEmailAndPassword , signInWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/9.14.0/firebase-auth.js"
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -41,6 +41,9 @@ export async function addVehicle(param0, param1, param2, param3, param4, param5,
         matricula: param9
       });
       console.log("Document written with ID: ", docRef.id);
+      await setDoc(doc(db, 'products', docRef.id) , {
+        hash: docRef.id
+      } , { merge: true})
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -52,7 +55,8 @@ export async function getAllVehicles(){
   querySnapshot.forEach((doc) => {
     mappedArray.push(doc.data())
   });
-  console.log('Get All Vehicles Done');
+  //console.log('Get All Vehicles Done');
+  console.log('Mapped Array:', mappedArray);
   return mappedArray;
 }
 
@@ -84,3 +88,36 @@ export function signIn(email, password){
     alert(errorMessage);
   });
 }
+
+export async function getVehicle(productName){
+  const querySnapshot = await getDocs(collection(db, "cities"));
+  const docRef = doc(db, 'products', productName);
+  const docSnap = await getDoc(docRef);
+
+  querySnapshot.forEach((doc) => {
+    // doc.data() is never undefined for query doc snapshots
+    // console.log(doc.id, " => ", doc.data());
+    if (docSnap.exists() & doc.id === productName) {
+      console.log("Document data:", docSnap.data());
+      return docSnap.data();
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  });
+}
+
+export async function setIdAll(){
+  const querySnapshot = await getDocs(collection(db, "products"));
+  //const mappedArray = [];
+  querySnapshot.forEach((elem) => {
+    //console.log(doc.id)
+    const vehRef = doc(db, 'products', elem.id);
+    setDoc(vehRef, { hash: elem.id }, { merge: true });
+    console.log(elem.data())
+  });
+  //console.log('Get All Vehicles Done');
+  //console.log('Mapped Array:', mappedArray);
+
+}
+

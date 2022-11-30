@@ -223,3 +223,7 @@ h1{
 body{
   padding: 0;
 }
+
+select{
+  display: inherit;
+}

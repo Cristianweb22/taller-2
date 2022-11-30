@@ -262,9 +262,11 @@
 ];
 */
 
-import { getAllVehicles } from "./firebase.js";
+import { getAllVehicles , setIdAll} from "./firebase.js";
 const products = await getAllVehicles();
-console.log(products);
+//setIdAll(); Esto solo era para colocarle el hash a todos los elementos, se hace una sola vez
+//console.log(products);
+
 // ESTABLECER LOS METODOS DE DISPLAY
 
 const displayData = (data) => {
@@ -286,7 +288,7 @@ const displayData = (data) => {
                 <h6>${Intl.NumberFormat("es", { style: "currency", currency: "COP" }).format(ele.precio)}</h6>
             </div>
             <div class="card-action">
-                <a href="/details/?id=${ele.id}">Ver Vehiculo</a>
+                <a href="/details/?id=${ele.hash}">Ver Vehiculo</a>
             </div>`;
         list.appendChild(card);
     });
@@ -314,21 +316,24 @@ function displayBodytype(){
 
 function displayVehType(){
     const vehTypeArr = [];
+    //console.log(vehTypeArr)
     products.forEach((product) => {
-        if(!vehTypeArr.includes(product.tipo)){
-            vehTypeArr.push(product.tipo)
+        if(!vehTypeArr.includes(product.tipoVeh)){
+            vehTypeArr.push(product.tipoVeh)
         }
     });
     
     const vehTypeList = document.getElementById('vehType')
     vehTypeArr.forEach((cat) => {
         const typeElem = document.createElement('option')
+        typeElem.setAttribute('display',true)
         typeElem.value = cat
         typeElem.id = cat
         typeElem.textContent = cat
-    
+        
         vehTypeList.append(typeElem)
     })
+    //console.log(vehTypeList)
 }
 
 // LLAMAR METODOS
@@ -372,7 +377,7 @@ function handleVehType(input){
     const keyword = input;
     console.log(keyword)
     const filterArray = products.filter((product) => {
-        return (product.tipo === keyword || keyword === '')
+        return (product.tipoVeh === keyword || keyword === '')
     })
     displayData(filterArray)
 }

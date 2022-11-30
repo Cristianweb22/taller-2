@@ -1,5 +1,5 @@
 //import {addTask} from '.firebase'
-import { addVehicle, getAllVehicles, newUser, signIn} from './firebase.js';
+import { addVehicle, getAllVehicles, newUser, signIn, getVehicle} from './firebase.js';
 
 const button = document.getElementById('submit-button')
 button?.addEventListener('click', (e) => clickForm(e))

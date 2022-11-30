@@ -1,8 +1,12 @@
 console.log(new URLSearchParams(window.location.search).get('id'));
 
+import { getAllVehicles , getVehicle} from "../firebase.js";
+const products = await getAllVehicles();
+//const vehicle = await getVehicle(new URLSearchParams(window.location.search).get('id'))
 const detailElem = products.filter((product) => {
-    return (product.id === new URLSearchParams(window.location.search).get('id'))
+    return (product.hash === new URLSearchParams(window.location.search).get('id'))
 })
+console.log('details.js says -> ' + detailElem)
 
 const productHead = document.getElementById('product-head')
 productHead.innerHTML = `
